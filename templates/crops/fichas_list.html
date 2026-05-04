@@ -1,0 +1,27 @@
+﻿{% extends "base.html" %}
+{% block title %}Fichas de Cultivo - Huerta CEA{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-green-800 mb-4">Fichas de Cultivo</h1>
+
+{% if especies %}
+<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {% for especie in especies %}
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition">
+        <h2 class="text-lg font-semibold text-green-800">{{ especie.nombre_comun }}</h2>
+        {% if especie.nombre_cientifico %}
+        <p class="text-sm text-gray-500 italic">{{ especie.nombre_cientifico }}</p>
+        {% endif %}
+        <p class="text-sm text-gray-600 mt-2">{{ especie.descripcion|truncatewords:30 }}</p>
+        <div class="mt-3 text-xs text-gray-500 space-y-1">
+            <p><span class="font-medium">Temporada:</span> {{ especie.get_temporada_recomendada_display }}</p>
+            <p><span class="font-medium">Riego:</span> {{ especie.frecuencia_riego }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+    <p class="text-yellow-800 text-sm">No hay fichas de cultivo disponibles.</p>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,44 @@
+﻿{% extends "base.html" %}
+{% block title %}Calendario de Cultivos - {{ mes_nombre }} {{ anio }} - Huerta CEA{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-green-800 mb-2">Calendario de Cultivos</h1>
+<p class="text-gray-600 mb-6">{{ mes_nombre }} de {{ anio }}</p>
+
+{% if cultivos %}
+<div class="overflow-x-auto">
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
+        <thead class="bg-green-700 text-white">
+            <tr>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Especie</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Fecha de Siembra</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Cosecha Estimada</th>
+                <th class="px-4 py-3 text-left text-sm font-semibold">Estado</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            {% for cultivo in cultivos %}
+            <tr class="hover:bg-green-50 transition">
+                <td class="px-4 py-3 text-sm font-medium text-gray-800">{{ cultivo.especie.nombre_comun }}</td>
+                <td class="px-4 py-3 text-sm text-gray-600">{{ cultivo.fecha_siembra|date:"d/m/Y" }}</td>
+                <td class="px-4 py-3 text-sm text-gray-600">{{ cultivo.fecha_cosecha_estimada|date:"d/m/Y" }}</td>
+                <td class="px-4 py-3 text-sm">
+                    <span class="inline-block px-2 py-1 rounded text-xs font-semibold
+                        {% if cultivo.estado == "SEMBRADO" %}bg-yellow-100 text-yellow-800
+                        {% elif cultivo.estado == "EN_CRECIMIENTO" %}bg-blue-100 text-blue-800
+                        {% elif cultivo.estado == "LISTO_COSECHA" %}bg-green-100 text-green-800
+                        {% elif cultivo.estado == "COSECHADO" %}bg-gray-100 text-gray-600
+                        {% endif %}">
+                        {{ cultivo.get_estado_display }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+    <p class="text-yellow-800 text-sm">No hay cultivos programados para {{ mes_nombre }} de {{ anio }}.</p>
+</div>
+{% endif %}
+{% endblock %}

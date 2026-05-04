@@ -1,0 +1,61 @@
+﻿{% extends "base.html" %}
+{% block title %}Actividades - Huerta CEA{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-green-800 mb-6">Actividades</h1>
+
+{% if actividades_programadas %}
+<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    {% for actividad in actividades_programadas %}
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition">
+        <h2 class="text-lg font-semibold text-green-800">{{ actividad.titulo }}</h2>
+        <div class="mt-2 text-sm text-gray-600 space-y-1">
+            <p><span class="font-medium">Fecha:</span> {{ actividad.fecha|date:"l d/m/Y" }}</p>
+            <p><span class="font-medium">Hora:</span> {{ actividad.hora|time:"H:i" }}</p>
+            <p><span class="font-medium">Lugar:</span> {{ actividad.lugar }}</p>
+            <p><span class="font-medium">Cupos:</span> {{ actividad.cupos_disponibles }} disponibles ({{ actividad.inscritos_actuales }}/{{ actividad.cupo_maximo }})</p>
+        </div>
+        <div class="mt-3">
+            <span class="inline-block px-2 py-1 rounded text-xs font-semibold
+                {% if actividad.estado == "PROGRAMADA" %}bg-blue-100 text-blue-800
+                {% elif actividad.estado == "EN_CURSO" %}bg-yellow-100 text-yellow-800
+                {% elif actividad.estado == "FINALIZADA" %}bg-green-100 text-green-800
+                {% elif actividad.estado == "CANCELADA" %}bg-red-100 text-red-800
+                {% endif %}">
+                {{ actividad.get_estado_display }}
+            </span>
+            {% if user.is_authenticated and actividad.estado != "CANCELADA" and actividad.cupos_disponibles > 0 %}
+            <form method="post" action="{% url 'activities:inscribirse' actividad.id %}" class="mt-3">
+                {% csrf_token %}
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-3 py-2 rounded transition">
+                    Inscribirse
+                </button>
+            </form>
+            {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+    <p class="text-yellow-800 text-sm">No hay actividades programadas actualmente.</p>
+</div>
+{% endif %}
+
+{% if actividades_pasadas %}
+<details class="mt-8">
+    <summary class="cursor-pointer text-sm font-medium text-gray-600 hover:text-green-700 transition">
+        Actividades pasadas ({{ actividades_pasadas|length }})
+    </summary>
+    <div class="mt-3 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+        {% for actividad in actividades_pasadas %}
+        <div class="bg-gray-50 rounded-lg border border-gray-200 p-3 opacity-75">
+            <h3 class="text-base font-medium text-gray-600">{{ actividad.titulo }}</h3>
+            <div class="mt-1 text-xs text-gray-500 space-y-0.5">
+                <p>{{ actividad.fecha|date:"l d/m/Y" }} — {{ actividad.hora|time:"H:i" }}</p>
+                <p>{{ actividad.lugar }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</details>
+{% endif %}
+{% endblock %}

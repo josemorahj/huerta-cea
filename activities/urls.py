@@ -1,0 +1,10 @@
+from django.urls import path
+from . import views
+
+app_name = 'activities'
+
+urlpatterns = [
+    path('', views.list_view, name='list'),
+    path('inscribirse/<int:actividad_id>/', views.inscribirse_view, name='inscribirse'),
+]
+

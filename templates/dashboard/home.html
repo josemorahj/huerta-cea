@@ -1,0 +1,20 @@
+﻿{% extends "base.html" %}
+{% block title %}Panel de Administración - Huerta CEA{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-green-800 mb-6">Panel de Administración</h1>
+
+<div class="grid gap-6 md:grid-cols-3">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <p class="text-4xl font-bold text-green-700">{{ total_voluntarios }}</p>
+        <p class="mt-2 text-sm font-medium text-gray-600">Voluntarios registrados</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <p class="text-4xl font-bold text-blue-700">{{ actividades_del_mes }}</p>
+        <p class="mt-2 text-sm font-medium text-gray-600">Actividades este mes</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">
+        <p class="text-4xl font-bold text-yellow-700">{{ cultivos_activos }}</p>
+        <p class="mt-2 text-sm font-medium text-gray-600">Cultivos activos</p>
+    </div>
+</div>
+{% endblock %}

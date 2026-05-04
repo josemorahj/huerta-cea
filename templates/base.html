@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block meta_description %}Plataforma de gesti&oacute;n de la Huerta Comunitaria del Centro Educativo Ambiental (CEA) - Municipalidad de Santiago{% endblock %}">
+
+    <title>{% block title %}Huerta CEA{% endblock %}</title>
+
+    {# Tailwind CSS via CDN #}
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    {# Estilos locales #}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-green-50 text-gray-800 min-h-screen flex flex-col">
+
+    {# NAVBAR #}
+    <header class="bg-green-700 text-white shadow-lg">
+        <nav class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="{% url 'home' %}" class="text-xl font-bold tracking-tight hover:text-green-200 transition">
+                Huerta CEA
+            </a>
+            <ul class="flex items-center space-x-4 text-sm">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'activities:list' %}" class="hover:text-green-200 transition">Actividades</a></li>
+                    {% if user.rol == 'admin' %}
+                        <li><a href="{% url 'dashboard:home' %}" class="hover:text-green-200 transition">Panel</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'crops:fichas_list' %}" class="hover:text-green-200 transition">Fichas de Cultivo</a></li>
+                    <li>
+                        <form method="post" action="{% url 'accounts:logout' %}" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-green-600 hover:bg-green-500 px-3 py-1 rounded transition">
+                                Cerrar sesi&oacute;n
+                            </button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'crops:fichas_list' %}" class="hover:text-green-200 transition">Fichas de Cultivo</a></li>
+                    <li><a href="{% url 'accounts:login' %}" class="hover:text-green-200 transition">Iniciar sesi&oacute;n</a></li>
+                    <li><a href="{% url 'accounts:register' %}" class="bg-green-600 hover:bg-green-500 px-3 py-1 rounded transition">Registrarse</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    {# MENSAJES FLASH #}
+    {% if messages %}
+        <div class="container mx-auto px-4 mt-4">
+            {% for message in messages %}
+                <div class="px-4 py-2 rounded shadow text-sm {% if message.tags == 'error' %}bg-red-100 text-red-700 border border-red-300{% elif message.tags == 'success' %}bg-green-100 text-green-700 border border-green-300{% else %}bg-blue-100 text-blue-700 border border-blue-300{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# CONTENIDO PRINCIPAL #}
+    <main class="container mx-auto px-4 py-6 flex-grow">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {# FOOTER #}
+    <footer class="bg-green-800 text-green-200 text-sm text-center py-4 mt-8">
+        <p>&copy; {% now "Y" %} Huerta Comunitaria CEA &mdash; Municipalidad de Santiago</p>
+        <p class="text-xs mt-1">Centro Educativo Ambiental &middot; Parque O&rsquo;Higgins</p>
+    </footer>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
