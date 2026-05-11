@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from decouple import config
 from datetime import timedelta
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -164,7 +165,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 DATABASE_URL = config('DATABASE_URL', default='sqlite:///db.sqlite3')
 if 'postgres' in DATABASE_URL:
     import re
-    import dj_database_url
     DATABASES['default'] = dj_database_url.config(default=DATABASE_URL, conn_max_age=600)
 else:
     DATABASES['default'] = {
