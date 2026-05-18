@@ -31,6 +31,7 @@
                         <li><a href="{% url 'dashboard:home' %}" class="hover:text-green-200 transition">Panel</a></li>
                     {% endif %}
                     <li><a href="{% url 'crops:fichas_list' %}" class="hover:text-green-200 transition">Fichas de Cultivo</a></li>
+                    <li><a href="{% url 'crops:calendario' %}" class="hover:text-green-200 transition">Calendario</a></li>
                     <li>
                         <form method="post" action="{% url 'accounts:logout' %}" class="inline">
                             {% csrf_token %}
