@@ -1,4 +1,4 @@
-﻿from django.shortcuts import render
+﻿from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from .models import CicloCultivo, Especie
 import calendar
@@ -54,3 +54,13 @@ def calendario_view(request):
     }
 
     return render(request, 'crops/calendario.html', context)
+
+
+def ficha_detalle_view(request, pk):
+    """
+    Vista de detalle de una ficha de cultivo (RF-07).
+    Muestra todos los campos del modelo Especie.
+    Acceso público, sin autenticación requerida.
+    """
+    especie = get_object_or_404(Especie, pk=pk)
+    return render(request, 'crops/ficha_detalle.html', {'especie': especie})

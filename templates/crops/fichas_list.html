@@ -7,7 +7,9 @@
 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
     {% for especie in especies %}
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition">
-        <h2 class="text-lg font-semibold text-green-800">{{ especie.nombre_comun }}</h2>
+        <h2 class="text-lg font-semibold text-green-800">
+            <a href="{% url 'crops:ficha_detalle' especie.pk %}" class="hover:text-green-600 transition">{{ especie.nombre_comun }}</a>
+        </h2>
         {% if especie.nombre_cientifico %}
         <p class="text-sm text-gray-500 italic">{{ especie.nombre_cientifico }}</p>
         {% endif %}
