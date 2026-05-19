@@ -61,3 +61,16 @@ def inscribirse_view(request, actividad_id):
             )
 
     return redirect('activities:list')
+
+
+@login_required
+def historial_view(request):
+    """
+    Muestra el historial de inscripciones del voluntario autenticado.
+    Incluye nombre de la actividad, fecha, estado de inscripción y asistencia.
+    """
+    inscripciones = Inscripcion.objects.filter(
+        voluntario=request.user,
+    ).select_related('actividad').order_by('-actividad__fecha', '-actividad__hora')
+
+    return render(request, 'activities/historial.html', {'inscripciones': inscripciones})

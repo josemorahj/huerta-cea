@@ -6,5 +6,6 @@ app_name = 'activities'
 urlpatterns = [
     path('', views.list_view, name='list'),
     path('inscribirse/<int:actividad_id>/', views.inscribirse_view, name='inscribirse'),
+    path('mi-historial/', views.historial_view, name='historial'),
 ]
 

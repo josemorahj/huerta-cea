@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Mi historial - Huerta CEA{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-green-800 mb-6">Mi historial de inscripciones</h1>
+
+{% if inscripciones %}
+<div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-200">
+    <table class="min-w-full text-sm">
+        <thead class="bg-green-700 text-white">
+            <tr>
+                <th class="text-left px-4 py-3 font-semibold">Actividad</th>
+                <th class="text-left px-4 py-3 font-semibold">Fecha</th>
+                <th class="text-left px-4 py-3 font-semibold">Estado inscripción</th>
+                <th class="text-center px-4 py-3 font-semibold">Asistió</th>
+            </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+            {% for inscripcion in inscripciones %}
+            <tr class="hover:bg-green-50 transition">
+                <td class="px-4 py-3 font-medium text-gray-800">{{ inscripcion.actividad.titulo }}</td>
+                <td class="px-4 py-3 text-gray-600">{{ inscripcion.actividad.fecha|date:"l d/m/Y" }} — {{ inscripcion.actividad.hora|time:"H:i" }}</td>
+                <td class="px-4 py-3">
+                    <span class="inline-block px-2 py-1 rounded text-xs font-semibold
+                        {% if inscripcion.estado == "CONFIRMADA" %}bg-green-100 text-green-800
+                        {% elif inscripcion.estado == "EN_ESPERA" %}bg-yellow-100 text-yellow-800
+                        {% elif inscripcion.estado == "CANCELADA" %}bg-red-100 text-red-800
+                        {% endif %}">
+                        {{ inscripcion.get_estado_display }}
+                    </span>
+                </td>
+                <td class="px-4 py-3 text-center">
+                    {% if inscripcion.asistio %}
+                    <span class="text-green-600 font-medium text-xs">Sí</span>
+                    {% else %}
+                    <span class="text-gray-400 font-medium text-xs">No</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+    <p class="text-yellow-800 text-sm">No tienes inscripciones registradas.</p>
+    <a href="{% url 'activities:list' %}" class="inline-block mt-3 text-sm text-green-700 hover:text-green-600 font-medium">
+        Ver actividades disponibles &rarr;
+    </a>
+</div>
+{% endif %}
+{% endblock %}

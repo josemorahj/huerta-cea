@@ -32,6 +32,7 @@
                     {% endif %}
                     <li><a href="{% url 'crops:fichas_list' %}" class="hover:text-green-200 transition">Fichas de Cultivo</a></li>
                     <li><a href="{% url 'crops:calendario' %}" class="hover:text-green-200 transition">Calendario</a></li>
+                    <li><a href="{% url 'activities:historial' %}" class="hover:text-green-200 transition">Mi historial</a></li>
                     <li>
                         <form method="post" action="{% url 'accounts:logout' %}" class="inline">
                             {% csrf_token %}
