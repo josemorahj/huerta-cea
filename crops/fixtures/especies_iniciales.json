@@ -1,0 +1,47 @@
+[
+  {
+    "model": "crops.especie",
+    "pk": 1,
+    "fields": {
+      "nombre_comun": "Peumo",
+      "nombre_cientifico": "Cryptocarya alba",
+      "descripcion": "Árbol nativo de Chile, de la familia de las Lauráceas, de hasta 20 m de altura. Su copa densa y frondosa lo convierte en un excelente árbol de sombra. Su fruto es una drupa rojiza comestible, muy apreciada por la fauna local. Tradicionalmente se ha usado en medicina natural por sus propiedades balsámicas y digestivas. Su madera es de gran durabilidad, empleada en carpintería y construcción rural. Es una especie emblemática del bosque esclerófilo de Chile central, presente en las quebradas y laderas de la Cordillera de la Costa y la Precordillera de Los Andes.",
+      "condiciones_cultivo": "Crece en suelos profundos, bien drenados y con buen contenido de materia orgánica. Tolera suelos arcillosos siempre que no se encharquen. Prefiere exposición de semi-sombra durante sus primeros años y pleno sol en estado adulto. Resiste temperaturas de hasta -10°C y periodos de sequía estival una vez establecido. Requiere protección del viento en etapas juveniles. El pH ideal del suelo está entre 6.0 y 7.5. Es ideal para bordes de huerta, cercos vivos o como árbol de sombra para cultivos que lo requieran.",
+      "frecuencia_riego": "Riego profundo cada 7 a 10 días durante los primeros dos años. Una vez establecido, riego cada 15 a 20 días en temporada seca. Reducir gradualmente en otoño e invierno.",
+      "temporada_recomendada": "ANUAL",
+      "imagen": "",
+      "fecha_creacion": "2026-05-18T00:00:00Z",
+      "fecha_actualizacion": "2026-05-18T00:00:00Z"
+    }
+  },
+  {
+    "model": "crops.especie",
+    "pk": 2,
+    "fields": {
+      "nombre_comun": "Lechuga",
+      "nombre_cientifico": "Lactuca sativa",
+      "descripcion": "Planta herbácea anual de la familia de las Asteráceas, cultivada principalmente por sus hojas en roseta, de sabor suave y textura crujiente. Existen numerosas variedades: crespa, escarola, romana, mantecosa y de hoja suelta. Es uno de los cultivos de hoja verde más populares en huertas urbanas y comunitarias por su rápido crecimiento y facilidad de manejo. Rica en vitaminas A, C y K, así como en ácido fólico y fibra. Su ciclo corto permite cosechas escalonadas durante gran parte del año, siendo ideal para rotación con otros cultivos de la huerta.",
+      "condiciones_cultivo": "Prefiere suelos sueltos, fértiles y con buen drenaje, ricos en materia orgánica. El pH óptimo está entre 6.0 y 7.0. Se desarrolla mejor a pleno sol, aunque tolera media sombra en climas cálidos extremos. La temperatura ideal de crecimiento es entre 15°C y 20°C; temperaturas sobre 25°C inducen floración prematura (subida de flor) y amargor en las hojas. Requiere camas de cultivo bien preparadas con compost maduro. Es sensible a la acumulación de sales en el suelo, por lo que se recomienda fertilización orgánica balanceada.",
+      "frecuencia_riego": "Riego frecuente cada 2 a 3 días, manteniendo la tierra constantemente húmeda pero sin encharcar. En días cálidos, puede requerir riego diario. Evitar mojar las hojas en la tarde para prevenir hongos. Ideal: riego por goteo o a ras de suelo.",
+      "temporada_recomendada": "OTONIO_INVIERNO",
+      "imagen": "",
+      "fecha_creacion": "2026-05-18T00:00:00Z",
+      "fecha_actualizacion": "2026-05-18T00:00:00Z"
+    }
+  },
+  {
+    "model": "crops.especie",
+    "pk": 3,
+    "fields": {
+      "nombre_comun": "Ceibo",
+      "nombre_cientifico": "Erythrina crista-galli",
+      "descripcion": "Árbol ornamental de la familia de las Fabáceas, nativo de Sudamérica (Brasil, Argentina, Uruguay, Paraguay y Bolivia). Es el árbol nacional argentino y uruguayo. Alcanza entre 5 y 10 m de altura, con un tronco leñoso y tortuoso de corteza rugosa. Su principal atractivo son sus espectaculares flores rojas o carmesí en forma de espiga, que aparecen entre primavera y verano. Atrae polinizadores como abejas, picaflores y mariposas. Fija nitrógeno en el suelo a través de nódulos en sus raíces, mejorando la fertilidad del suelo para los cultivos circundantes. Es perfecto como árbol de sombra y ornamental en espacios comunitarios.",
+      "condiciones_cultivo": "Crece bien en suelos húmedos, franco-arcillosos, con buen drenaje. Tolera suelos pobres gracias a su capacidad de fijar nitrógeno, pero se desarrolla mejor con materia orgánica incorporada. Prefiere pleno sol y temperaturas cálidas. Resiste heladas suaves (hasta -5°C) una vez establecido. En Chile central se adapta muy bien, especialmente cerca de cursos de agua. Requiere espacio amplio para su desarrollo radicular y de copa. Es resistente a la sequía estacional una vez maduro. Ideal para bordes de huerta como árbol de sombra parcial y ornamental.",
+      "frecuencia_riego": "Riego cada 10 a 14 días durante los primeros dos años. Una vez establecido, riego cada 3 a 4 semanas en temporada seca. En invierno, suspender riego si hay lluvias regulares. Resiste bien la sequía moderada.",
+      "temporada_recomendada": "ANUAL",
+      "imagen": "",
+      "fecha_creacion": "2026-05-18T00:00:00Z",
+      "fecha_actualizacion": "2026-05-18T00:00:00Z"
+    }
+  }
+]
