@@ -147,11 +147,11 @@ STORAGES = {
         else "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND": "config.storage.SequentialCompressedStaticFilesStorage",
     },
 }
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+STATICFILES_STORAGE = "config.storage.SequentialCompressedStaticFilesStorage"
 
 # Cloudinary storage
 CLOUDINARY_STORAGE = {
