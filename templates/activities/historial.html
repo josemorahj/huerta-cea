@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}Mi historial - Huerta CEA{% endblock %}
 {% block content %}
+Stop-Process -Name python -Force
+
 <h1 class="text-2xl font-bold text-green-800 mb-6">Mi historial de inscripciones</h1>
 
 {% if inscripciones %}
@@ -12,6 +14,7 @@
                 <th class="text-left px-4 py-3 font-semibold">Fecha</th>
                 <th class="text-left px-4 py-3 font-semibold">Estado inscripción</th>
                 <th class="text-center px-4 py-3 font-semibold">Asistió</th>
+                <th class="text-center px-4 py-3 font-semibold">Acción</th>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -35,6 +38,16 @@
                     <span class="text-gray-400 font-medium text-xs">No</span>
                     {% endif %}
                 </td>
+                <td class="px-4 py-3 text-center">
+                    {% if inscripcion.estado != "CANCELADA" and inscripcion.actividad.fecha >= hoy %}
+                    <form method="post" action="{% url 'activities:desinscribirse' inscripcion.actividad.id %}" onsubmit="return confirm('¿Estás seguro de que deseas desinscribirte de esta actividad?')">
+                        {% csrf_token %}
+                        <button type="submit" class="bg-red-500 hover:bg-red-400 text-white text-xs font-medium px-3 py-1.5 rounded transition">
+                            Desinscribirse
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
             </tr>
             {% endfor %}
         </tbody>
@@ -49,3 +62,4 @@
 </div>
 {% endif %}
 {% endblock %}
+

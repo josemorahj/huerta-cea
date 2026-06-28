@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
+from django.views.decorators.http import require_POST
 from .models import Actividad, Inscripcion
 
 
@@ -64,6 +65,34 @@ def inscribirse_view(request, actividad_id):
 
 
 @login_required
+@require_POST
+def desinscribirse_view(request, actividad_id):
+    """
+    Desinscribe al voluntario autenticado de una actividad.
+    Busca la inscripción del usuario para la actividad dada y la elimina.
+    Si no existe, redirige con mensaje de error.
+    """
+    try:
+        inscripcion = Inscripcion.objects.get(
+            actividad_id=actividad_id,
+            voluntario=request.user,
+        )
+        titulo = inscripcion.actividad.titulo
+        inscripcion.delete()
+        messages.success(
+            request,
+            f'Te has desinscrito correctamente de "{titulo}".',
+        )
+    except Inscripcion.DoesNotExist:
+        messages.error(
+            request,
+            'No estás inscrito en esta actividad.',
+        )
+
+    return redirect('activities:historial')
+
+
+@login_required
 def historial_view(request):
     """
     Muestra el historial de inscripciones del voluntario autenticado.
@@ -73,4 +102,8 @@ def historial_view(request):
         voluntario=request.user,
     ).select_related('actividad').order_by('-actividad__fecha', '-actividad__hora')
 
-    return render(request, 'activities/historial.html', {'inscripciones': inscripciones})
+    return render(request, 'activities/historial.html', {
+        'inscripciones': inscripciones,
+        'hoy': timezone.now().date(),
+    })
+
