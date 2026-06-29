@@ -97,4 +97,118 @@
     </span>
 </div>
 
+<!-- Modal de detalle de cultivos -->
+<div id="cultivoModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40">
+    <div class="bg-white rounded-xl shadow-2xl max-w-lg w-full mx-4 max-h-[80vh] overflow-y-auto">
+        <!-- Cabecera del modal -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+            <h2 id="modalTitulo" class="text-lg font-bold text-green-800">Cultivos del día</h2>
+            <button id="modalCerrar" class="text-gray-400 hover:text-gray-600 text-2xl leading-none font-bold">&times;</button>
+        </div>
+        <!-- Cuerpo del modal -->
+        <div id="modalCuerpo" class="px-6 py-4 space-y-4">
+            <!-- Se rellena dinámicamente con JS -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function() {
+    'use strict';
+
+    var modal = document.getElementById('cultivoModal');
+    var modalTitulo = document.getElementById('modalTitulo');
+    var modalCuerpo = document.getElementById('modalCuerpo');
+    var modalCerrar = document.getElementById('modalCerrar');
+
+    // Mapa de estados a etiqueta + color
+    var ESTADOS = {
+        'SEMBRADO':       { label: 'Sembrado',       clase: 'bg-yellow-100 text-yellow-800' },
+        'EN_CRECIMIENTO': { label: 'En crecimiento', clase: 'bg-blue-100 text-blue-800' },
+        'LISTO_COSECHA':  { label: 'Listo para cosechar', clase: 'bg-green-100 text-green-800' },
+        'COSECHADO':      { label: 'Cosechado',      clase: 'bg-gray-100 text-gray-600' },
+    };
+
+    function cerrarModal() {
+        modal.classList.add('hidden');
+    }
+
+    // Cerrar con botón X
+    modalCerrar.addEventListener('click', cerrarModal);
+
+    // Cerrar al hacer clic fuera del contenido
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) cerrarModal();
+    });
+
+    // Cerrar con Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+            cerrarModal();
+        }
+    });
+
+    // Click en las celdas del calendario que tengan cultivos
+    document.querySelectorAll('[data-cultivo-id]').forEach(function(el) {
+        // Encontrar la celda día (padre común)
+        var celda = el.closest('.min-h-\\[100px\\]');
+        if (!celda) return;
+
+        celda.style.cursor = 'pointer';
+
+        // Solo registrar una vez por celda
+        if (celda.dataset._calModal) return;
+        celda.dataset._calModal = '1';
+
+        celda.addEventListener('click', function(e) {
+            if (e.target.closest('a')) return;
+
+            // Obtener número de día
+            var numSpan = celda.querySelector('.inline-flex.items-center.justify-center');
+            var diaTexto = numSpan ? numSpan.textContent.trim() : '?';
+
+            modalTitulo.textContent = 'Cultivos - D\u00eda ' + diaTexto;
+            modalCuerpo.innerHTML = '';
+
+            // Recopilar todos los cultivos únicos dentro de esta celda
+            var cultivos = celda.querySelectorAll('[data-cultivo-id]');
+            cultivos.forEach(function(c) {
+                var nombre  = c.dataset.cultivoNombre || '\u2014';
+                var siembra = c.dataset.cultivoSiembra || '\u2014';
+                var cosecha = c.dataset.cultivoCosecha || '\u2014';
+                var estado  = c.dataset.cultivoEstado || '';
+                var info    = ESTADOS[estado] || { label: estado, clase: 'bg-gray-100 text-gray-600' };
+
+                var card = document.createElement('div');
+                card.className = 'border border-gray-200 rounded-lg p-4 hover:shadow-sm transition';
+
+                card.innerHTML =
+                    '<div class="flex items-center justify-between mb-2">' +
+                        '<h3 class="font-semibold text-gray-800">' + escapeHtml(nombre) + '</h3>' +
+                        '<span class="inline-block px-2 py-1 rounded text-xs font-semibold ' + info.clase + '">' +
+                            escapeHtml(info.label) +
+                        '</span>' +
+                    '</div>' +
+                    '<div class="text-sm text-gray-600 space-y-1">' +
+                        '<p><span class="font-medium">Siembra:</span> ' + escapeHtml(siembra) + '</p>' +
+                        '<p><span class="font-medium">Cosecha estimada:</span> ' + escapeHtml(cosecha) + '</p>' +
+                    '</div>';
+
+                modalCuerpo.appendChild(card);
+            });
+
+            modal.classList.remove('hidden');
+        });
+    });
+
+    function escapeHtml(str) {
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+})();
+</script>
 {% endblock %}
