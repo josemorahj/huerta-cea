@@ -1,7 +1,8 @@
-﻿from django.shortcuts import render, get_object_or_404
-from django.utils import timezone
-from .models import CicloCultivo, Especie
-import calendar
+﻿MESES_ES = {
+    1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
+    5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto',
+    9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre',
+}
 
 
 def fichas_view(request):
@@ -120,7 +121,7 @@ def calendario_view(request):
         'semanas': semanas,
         'mes': mes,
         'anio': anio,
-        'mes_nombre': calendar.month_name[mes].capitalize(),
+        'mes_nombre': MESES_ES[mes],
         'mes_anterior': mes_anterior,
         'anio_anterior': anio_anterior,
         'mes_siguiente': mes_siguiente,
@@ -138,4 +139,3 @@ def ficha_detalle_view(request, pk):
     """
     especie = get_object_or_404(Especie, pk=pk)
     return render(request, 'crops/ficha_detalle.html', {'especie': especie})
-
