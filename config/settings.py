@@ -40,9 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     # WhiteNoise
     'whitenoise.runserver_nostatic',
-    # Cloudinary
-    'cloudinary_storage',
-    'cloudinary',
+    
     # Own apps
     'accounts',
     'activities',
@@ -55,6 +53,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Cloudinary (Movido al final para el correcto orden de carga de storages)
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -139,19 +141,10 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-# STORAGES — sintaxis oficial Django 5.2/6.0
 STORAGES = {
-    "default": {
-        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"
-        if config("CLOUDINARY_CLOUD_NAME", default="")
-        else "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "config.storage.SequentialCompressedStaticFilesStorage",
-    },
+    "default": {"BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage"},
+    "staticfiles": {"BACKEND": "config.storage.SequentialCompressedStaticFilesStorage"},
 }
-
-STATICFILES_STORAGE = "config.storage.SequentialCompressedStaticFilesStorage"
 
 # Cloudinary storage
 CLOUDINARY_STORAGE = {
@@ -209,7 +202,6 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
     
 else:
-    
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
     SECURE_SSL_REDIRECT = False
