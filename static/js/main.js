@@ -1,2 +1,1 @@
-// Huerta CEA - Scripts globales
-console.log('Huerta CEA - Plataforma de gestión comunitaria');
+console.log('Huerta CEA - Plataforma de gestion comunitaria');
