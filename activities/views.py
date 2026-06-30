@@ -11,16 +11,21 @@ from .forms import ActividadForm
 
 def list_view(request):
     """
-    Muestra todas las actividades inscribibles (RF-04, RF-05).
-    El criterio para inscripcion es el ESTADO (PROGRAMADA o EN_CURSO), no la fecha.
-    Las actividades FINALIZADA o CANCELADA van a la seccion pasadas.
+    Muestra todas las actividades (RF-04, RF-05).
+    Criterio de inscripcion combinado:
+    - EN_CURSO: siempre inscribible, sin importar fecha.
+    - PROGRAMADA: inscribible solo si la fecha es hoy o futura.
+    - FINALIZADA, CANCELADA, o PROGRAMADA con fecha pasada: van a "pasadas y canceladas".
     """
+    from django.db.models import Q
+    ahora = timezone.now()
+
     actividades_programadas = Actividad.objects.filter(
-        estado__in=['PROGRAMADA', 'EN_CURSO'],
+        Q(estado='EN_CURSO') | Q(estado='PROGRAMADA', fecha__gte=ahora.date()),
     ).order_by('fecha', 'hora')
 
     actividades_pasadas = Actividad.objects.filter(
-        estado__in=['FINALIZADA', 'CANCELADA'],
+        Q(estado__in=['FINALIZADA', 'CANCELADA']) | Q(estado='PROGRAMADA', fecha__lt=ahora.date()),
     ).order_by('-fecha', 'hora')
 
     context = {

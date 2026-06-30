@@ -61,7 +61,7 @@
 {% if actividades_pasadas %}
 <details class="mt-8">
     <summary class="cursor-pointer text-sm font-medium text-gray-600 hover:text-green-700 transition">
-        Actividades pasadas ({{ actividades_pasadas|length }})
+        Actividades pasadas y canceladas ({{ actividades_pasadas|length }})
     </summary>
     <div class="mt-3 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
         {% for actividad in actividades_pasadas %}
