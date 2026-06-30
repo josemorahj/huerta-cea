@@ -11,17 +11,16 @@ from .forms import ActividadForm
 
 def list_view(request):
     """
-    Muestra todas las actividades programadas (RF-04, RF-05).
-    Las actividades pasadas se muestran al final.
+    Muestra todas las actividades inscribibles (RF-04, RF-05).
+    El criterio para inscripcion es el ESTADO (PROGRAMADA o EN_CURSO), no la fecha.
+    Las actividades FINALIZADA o CANCELADA van a la seccion pasadas.
     """
-    ahora = timezone.now()
-
     actividades_programadas = Actividad.objects.filter(
-        fecha__gte=ahora.date(),
-    ).exclude(estado='CANCELADA').order_by('fecha', 'hora')
+        estado__in=['PROGRAMADA', 'EN_CURSO'],
+    ).order_by('fecha', 'hora')
 
     actividades_pasadas = Actividad.objects.filter(
-        fecha__lt=ahora.date(),
+        estado__in=['FINALIZADA', 'CANCELADA'],
     ).order_by('-fecha', 'hora')
 
     context = {
