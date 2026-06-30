@@ -213,3 +213,63 @@ def especie_eliminar_view(request, pk):
 
     return render(request, 'crops/especie_confirm_delete.html', {'especie': especie})
 
+
+@login_required
+def ciclo_list_view(request):
+    ciclos = CicloCultivo.objects.select_related('especie').all()
+    return render(request, 'crops/ciclo_list.html', {'ciclos': ciclos})
+
+
+@login_required
+def ciclo_crear_view(request):
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permiso para realizar esta acción.')
+        return redirect('crops:ciclo_list')
+
+    if request.method == 'POST':
+        form = CicloCultivoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Ciclo de cultivo creado correctamente.')
+            return redirect('crops:ciclo_list')
+    else:
+        form = CicloCultivoForm()
+
+    return render(request, 'crops/ciclo_form.html', {'form': form, 'modo': 'crear'})
+
+
+@login_required
+def ciclo_editar_view(request, pk):
+    ciclo = get_object_or_404(CicloCultivo, pk=pk)
+
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permiso para realizar esta acción.')
+        return redirect('crops:ciclo_list')
+
+    if request.method == 'POST':
+        form = CicloCultivoForm(request.POST, instance=ciclo)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Ciclo de cultivo actualizado correctamente.')
+            return redirect('crops:ciclo_list')
+    else:
+        form = CicloCultivoForm(instance=ciclo)
+
+    return render(request, 'crops/ciclo_form.html', {'form': form, 'modo': 'editar', 'ciclo': ciclo})
+
+
+@login_required
+def ciclo_eliminar_view(request, pk):
+    ciclo = get_object_or_404(CicloCultivo, pk=pk)
+
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permiso para realizar esta acción.')
+        return redirect('crops:ciclo_list')
+
+    if request.method == 'POST':
+        ciclo.delete()
+        messages.success(request, 'Ciclo de cultivo eliminado correctamente.')
+        return redirect('crops:ciclo_list')
+
+    return render(request, 'crops/ciclo_confirm_delete.html', {'ciclo': ciclo})
+
