@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
+from django.db.models import ProtectedError
 
 from .models import User
 from .forms import UsuarioForm, UsuarioCrearForm
@@ -172,6 +173,10 @@ def usuario_eliminar_view(request, pk):
         messages.error(request, 'No puedes eliminar tu propia cuenta.')
         return redirect('accounts:usuario_list')
 
-    usuario.delete()
-    messages.success(request, 'Usuario eliminado correctamente.')
+    try:
+        usuario.delete()
+        messages.success(request, 'Usuario eliminado correctamente.')
+    except ProtectedError:
+        messages.error(request, f'No se puede eliminar a {usuario.username}: tiene actividades u otros registros asociados. Desactívalo en su lugar (editar usuario, desmarcar "Activo").')
+
     return redirect('accounts:usuario_list')
