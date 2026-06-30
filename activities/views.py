@@ -6,6 +6,7 @@ from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.views.decorators.http import require_POST
 from .models import Actividad, Inscripcion
+from .forms import ActividadForm
 
 
 def list_view(request):
@@ -106,4 +107,73 @@ def historial_view(request):
         'inscripciones': inscripciones,
         'hoy': timezone.now().date(),
     })
+
+
+def es_admin(user):
+    return user.is_authenticated and user.rol == 'admin'
+
+
+@login_required
+def crear_view(request):
+    """
+    Crea una nueva actividad (RF-04).
+    Solo accesible para administradores.
+    """
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permisos para crear actividades.')
+        return redirect('activities:list')
+
+    if request.method == 'POST':
+        form = ActividadForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Actividad creada correctamente.')
+            return redirect('activities:list')
+    else:
+        form = ActividadForm()
+
+    return render(request, 'activities/form.html', {'form': form, 'titulo_pagina': 'Crear actividad'})
+
+
+@login_required
+def editar_view(request, actividad_id):
+    """
+    Edita una actividad existente (RF-04).
+    Solo accesible para administradores.
+    """
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permisos para editar actividades.')
+        return redirect('activities:list')
+
+    if request.method == 'POST':
+        form = ActividadForm(request.POST, instance=actividad)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Actividad actualizada correctamente.')
+            return redirect('activities:list')
+    else:
+        form = ActividadForm(instance=actividad)
+
+    return render(request, 'activities/form.html', {'form': form, 'titulo_pagina': 'Editar actividad'})
+
+
+@login_required
+@require_POST
+def eliminar_view(request, actividad_id):
+    """
+    Elimina una actividad (RF-04).
+    Solo accesible para administradores.
+    """
+    actividad = get_object_or_404(Actividad, id=actividad_id)
+
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permisos para eliminar actividades.')
+        return redirect('activities:list')
+
+    titulo = actividad.titulo
+    actividad.delete()
+    messages.success(request, f'Actividad "{titulo}" eliminada correctamente.')
+    return redirect('activities:list')
 
