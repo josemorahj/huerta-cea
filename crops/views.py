@@ -1,8 +1,15 @@
-﻿from django.shortcuts import render, get_object_or_404
+﻿from django.shortcuts import render, get_object_or_404, redirect
 from django.utils import timezone
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 import calendar
 from activities.models import Actividad
 from .models import Especie, CicloCultivo
+from .forms import EspecieForm, CicloCultivoForm
+
+def es_admin(user):
+    return user.is_authenticated and getattr(user, 'rol', None) == 'admin'
+
 
 MESES_ES = {
     1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
@@ -151,4 +158,58 @@ def ficha_detalle_view(request, pk):
     """
     especie = get_object_or_404(Especie, pk=pk)
     return render(request, 'crops/ficha_detalle.html', {'especie': especie})
+
+
+@login_required
+def especie_crear_view(request):
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permiso para realizar esta acción.')
+        return redirect('crops:fichas_list')
+
+    if request.method == 'POST':
+        form = EspecieForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Especie creada correctamente.')
+            return redirect('crops:fichas_list')
+    else:
+        form = EspecieForm()
+
+    return render(request, 'crops/especie_form.html', {'form': form, 'modo': 'crear'})
+
+
+@login_required
+def especie_editar_view(request, pk):
+    especie = get_object_or_404(Especie, pk=pk)
+
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permiso para realizar esta acción.')
+        return redirect('crops:fichas_list')
+
+    if request.method == 'POST':
+        form = EspecieForm(request.POST, request.FILES, instance=especie)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Especie actualizada correctamente.')
+            return redirect('crops:fichas_list')
+    else:
+        form = EspecieForm(instance=especie)
+
+    return render(request, 'crops/especie_form.html', {'form': form, 'modo': 'editar', 'especie': especie})
+
+
+@login_required
+def especie_eliminar_view(request, pk):
+    especie = get_object_or_404(Especie, pk=pk)
+
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permiso para realizar esta acción.')
+        return redirect('crops:fichas_list')
+
+    if request.method == 'POST':
+        especie.delete()
+        messages.success(request, 'Especie eliminada correctamente.')
+        return redirect('crops:fichas_list')
+
+    return render(request, 'crops/especie_confirm_delete.html', {'especie': especie})
 
