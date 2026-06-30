@@ -71,6 +71,20 @@
                         {% endfor %}
                     </div>
                     {% endif %}
+
+                    <!-- Indicadores de actividades -->
+                    {% if dia.actividades_del_dia %}
+                    <div class="mt-1 space-y-1">
+                        {% for actividad in dia.actividades_del_dia %}
+                        <div class="flex items-center gap-1">
+                            <span class="inline-block w-2 h-2 rounded-full bg-purple-500"></span>
+                            <span class="text-xs text-purple-700 truncate max-w-[80px] block leading-tight">
+                                {{ actividad.titulo }}
+                            </span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
             {% endif %}
         {% endfor %}

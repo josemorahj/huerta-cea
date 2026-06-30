@@ -1,6 +1,7 @@
 ﻿from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 import calendar
+from activities.models import Actividad
 from .models import Especie, CicloCultivo
 
 MESES_ES = {
@@ -90,6 +91,8 @@ def calendario_view(request):
 
     cultivos_del_mes = cultivos_del_mes.select_related('especie')
 
+    actividades_del_mes = Actividad.objects.filter(fecha__month=mes, fecha__year=anio)
+
     # --- Generar estructura de semanas para la cuadrícula ---
     cal = calendar.Calendar(firstweekday=0)  # Lunes como primer día
     semanas_raw = cal.monthdayscalendar(anio, mes)
@@ -103,6 +106,7 @@ def calendario_view(request):
             dia_info = {
                 'numero_dia': numero_dia,
                 'cultivos_del_dia': [],
+                'actividades_del_dia': [],
                 'es_hoy': False,
             }
             if numero_dia != 0:
@@ -115,6 +119,9 @@ def calendario_view(request):
                     if c.fecha_siembra == fecha_dia or c.fecha_cosecha_estimada == fecha_dia
                 ]
                 dia_info['cultivos_del_dia'] = cultivos_del_dia
+
+                actividades_del_dia = [a for a in actividades_del_mes if a.fecha == fecha_dia]
+                dia_info['actividades_del_dia'] = actividades_del_dia
 
             dias_semana.append(dia_info)
         semanas.append({'dias': dias_semana})
