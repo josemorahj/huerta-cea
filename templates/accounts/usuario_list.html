@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Gestión de Usuarios - Huerta CEA{% endblock %}
+{% block content %}
+
+<div class="flex items-center justify-between mb-4">
+  <h1 class="text-2xl font-bold text-green-800">Gestión de Usuarios</h1>
+  <a href="{% url 'accounts:usuario_crear' %}" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-2 rounded transition">
+    Nuevo usuario
+  </a>
+</div>
+
+{% if usuarios %}
+<div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200">
+  <table class="min-w-full text-sm">
+    <thead class="bg-gray-50 border-b border-gray-200">
+      <tr>
+        <th class="text-left px-4 py-2 font-medium text-gray-700">Usuario</th>
+        <th class="text-left px-4 py-2 font-medium text-gray-700">Nombre</th>
+        <th class="text-left px-4 py-2 font-medium text-gray-700">Email</th>
+        <th class="text-left px-4 py-2 font-medium text-gray-700">Rol</th>
+        <th class="text-left px-4 py-2 font-medium text-gray-700">Activo</th>
+        <th class="text-left px-4 py-2 font-medium text-gray-700">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for usuario in usuarios %}
+      <tr class="border-b border-gray-100">
+        <td class="px-4 py-2">{{ usuario.username }}</td>
+        <td class="px-4 py-2">{{ usuario.get_full_name }}</td>
+        <td class="px-4 py-2">{{ usuario.email }}</td>
+        <td class="px-4 py-2">{{ usuario.get_rol_display }}</td>
+        <td class="px-4 py-2">{% if usuario.is_active %}Sí{% else %}No{% endif %}</td>
+        <td class="px-4 py-2 flex gap-3 text-xs items-center">
+          <a href="{% url 'accounts:usuario_editar' usuario.pk %}" class="text-green-700 hover:text-green-500 font-medium">Editar</a>
+          {% if usuario.pk != request.user.pk %}
+          <form method="post" action="{% url 'accounts:usuario_eliminar' usuario.pk %}" onsubmit="return confirm('¿Seguro que deseas eliminar a {{ usuario.username }}? Esta acción no se puede deshacer.');">
+            {% csrf_token %}
+            <button type="submit" class="text-red-600 hover:text-red-500 font-medium">Eliminar</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+  <p class="text-yellow-800 text-sm">No hay usuarios registrados.</p>
+</div>
+{% endif %}
+
+{% endblock %}

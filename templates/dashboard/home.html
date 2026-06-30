@@ -1,7 +1,12 @@
 ﻿{% extends "base.html" %}
 {% block title %}Panel de Administración - Huerta CEA{% endblock %}
 {% block content %}
-<h1 class="text-2xl font-bold text-green-800 mb-6">Panel de Administración</h1>
+<div class="flex items-center justify-between mb-6">
+  <h1 class="text-2xl font-bold text-green-800">Panel de Administración</h1>
+  <a href="{% url 'accounts:usuario_list' %}" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-2 rounded transition">
+    Gestionar usuarios
+  </a>
+</div>
 
 <div class="grid gap-6 md:grid-cols-3">
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 text-center">

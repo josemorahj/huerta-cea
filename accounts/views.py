@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -6,6 +6,11 @@ from django.urls import reverse
 from django.views.decorators.http import require_http_methods
 
 from .models import User
+from .forms import UsuarioForm, UsuarioCrearForm
+
+
+def es_admin(user):
+    return user.is_authenticated and getattr(user, 'rol', None) == 'admin'
 
 
 @require_http_methods(['GET', 'POST'])
@@ -98,3 +103,75 @@ def home_view(request):
             return redirect('dashboard:home')
         return redirect('activities:list')
     return redirect('accounts:login')
+
+
+@login_required
+def usuario_list_view(request):
+    """RF-10: listado de usuarios para gestión por admin."""
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permisos para acceder a esta sección.')
+        return redirect('home')
+
+    usuarios = User.objects.all().order_by('username')
+    return render(request, 'accounts/usuario_list.html', {'usuarios': usuarios})
+
+
+@login_required
+@require_http_methods(['GET', 'POST'])
+def usuario_crear_view(request):
+    """RF-10: alta de usuario por admin, con rol elegible."""
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permisos para acceder a esta sección.')
+        return redirect('home')
+
+    if request.method == 'POST':
+        form = UsuarioCrearForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Usuario creado correctamente.')
+            return redirect('accounts:usuario_list')
+    else:
+        form = UsuarioCrearForm()
+
+    return render(request, 'accounts/usuario_form.html', {'form': form, 'modo': 'crear'})
+
+
+@login_required
+@require_http_methods(['GET', 'POST'])
+def usuario_editar_view(request, pk):
+    """RF-10: edición de usuario existente por admin."""
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permisos para acceder a esta sección.')
+        return redirect('home')
+
+    usuario = get_object_or_404(User, pk=pk)
+
+    if request.method == 'POST':
+        form = UsuarioForm(request.POST, instance=usuario)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Usuario actualizado correctamente.')
+            return redirect('accounts:usuario_list')
+    else:
+        form = UsuarioForm(instance=usuario)
+
+    return render(request, 'accounts/usuario_form.html', {'form': form, 'modo': 'editar', 'usuario': usuario})
+
+
+@login_required
+@require_http_methods(['POST'])
+def usuario_eliminar_view(request, pk):
+    """RF-10: eliminación de usuario por admin. No permite autoeliminarse."""
+    if not es_admin(request.user):
+        messages.error(request, 'No tienes permisos para acceder a esta sección.')
+        return redirect('home')
+
+    usuario = get_object_or_404(User, pk=pk)
+
+    if usuario.pk == request.user.pk:
+        messages.error(request, 'No puedes eliminar tu propia cuenta.')
+        return redirect('accounts:usuario_list')
+
+    usuario.delete()
+    messages.success(request, 'Usuario eliminado correctamente.')
+    return redirect('accounts:usuario_list')

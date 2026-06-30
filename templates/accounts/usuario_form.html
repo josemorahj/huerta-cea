@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{% if modo == 'crear' %}Nuevo Usuario{% else %}Editar Usuario{% endif %} - Huerta CEA{% endblock %}
+{% block content %}
+
+<div class="max-w-lg mx-auto">
+  <h1 class="text-2xl font-bold text-green-800 mb-4">
+    {% if modo == 'crear' %}Nuevo Usuario{% else %}Editar Usuario{% endif %}
+  </h1>
+
+  <form method="post" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-4">
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="bg-red-50 border-l-4 border-red-400 p-3 rounded text-sm text-red-700">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+
+    {% for field in form %}
+    <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+        <p class="text-red-600 text-xs mt-1">{{ field.errors|striptags }}</p>
+        {% endif %}
+    </div>
+    {% endfor %}
+
+    <div class="flex gap-3 pt-2">
+        <button type="submit" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-2 rounded transition">
+            Guardar
+        </button>
+        <a href="{% url 'accounts:usuario_list' %}" class="text-gray-600 hover:text-gray-800 text-sm font-medium px-4 py-2">
+            Cancelar
+        </a>
+    </div>
+  </form>
+</div>
+
+{% endblock %}
